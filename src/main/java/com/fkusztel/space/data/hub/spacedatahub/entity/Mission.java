@@ -38,6 +38,6 @@ public class Mission implements Serializable {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @OneToOne(mappedBy = "byMission", optional = false)
+    @OneToOne(fetch=FetchType.LAZY, mappedBy = "byMission")
     private Product product;
 }

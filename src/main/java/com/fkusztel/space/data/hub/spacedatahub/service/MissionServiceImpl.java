@@ -55,9 +55,9 @@ public class MissionServiceImpl implements MissionService {
     @Override
     public boolean checkImageType(String imageType) {
         //Check if imageType has proper value
-        if (imageType.equals(Constants.ImageType.HYPERPECTRAL)
-                || imageType.equals(Constants.ImageType.MULTISPECTRAL)
-                || imageType.equals(Constants.ImageType.PANCHROMATIC)){
+        if (imageType.equalsIgnoreCase(Constants.ImageType.HYPERPECTRAL)
+                || imageType.equalsIgnoreCase(Constants.ImageType.MULTISPECTRAL)
+                || imageType.equalsIgnoreCase(Constants.ImageType.PANCHROMATIC)){
             return true;
         }
         return false;

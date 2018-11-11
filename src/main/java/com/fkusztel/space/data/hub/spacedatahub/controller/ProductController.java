@@ -26,16 +26,18 @@ public class ProductController {
     @PostMapping(path = "/create")
     public @ResponseBody
     String createProduct(@RequestParam String acquisitionDate, @RequestParam String missionName,
-                         @RequestParam List<String> footprint, @RequestParam Double price, String url) {
+                         @RequestParam List<String> footprint, @RequestParam Double price, @RequestParam String url) {
 
         Product product = Product.builder()
                 .acquisitionDate(LocalDate.parse(acquisitionDate))
                 .footprint(footprint)
+                .nameMission(missionName)
                 .price(price)
                 .url(url)
                 .build();
 
         log.info("createProduct: {}", product.toString());
+        productService.saveProduct(product);
         return "Created " + product.toString();
     }
 
@@ -47,21 +49,22 @@ public class ProductController {
 
     @GetMapping(path = "/lower")
     public @ResponseBody
-    Iterable<Product> findProductByDateLower(LocalDate date) {
-        return productService.findProductByDateLower(date);
+    Iterable<Product> findProductByDateLower(String date) {
+        return productService.findProductByDateLower(LocalDate.parse(date));
     }
 
     @GetMapping(path = "/greater")
     public @ResponseBody
-    Iterable<Product> findProductByDateGreater(LocalDate date) {
-        return productService.findProductByDateGreater(date);
+    Iterable<Product> findProductByDateGreater(String date) {
+        return productService.findProductByDateGreater(LocalDate.parse(date));
     }
 
     @GetMapping(path = "/between")
     public @ResponseBody
-    Iterable<Product> findProductByDateBetween(LocalDate startDate,
-                                               LocalDate endDate) {
+    Iterable<Product> findProductByDateBetween(String startDate,
+                                               String endDate) {
 
-        return productService.findProductByDateBetween(startDate, endDate);
+        return productService.findProductByDateBetween(LocalDate.parse(startDate),
+                LocalDate.parse(endDate));
     }
 }

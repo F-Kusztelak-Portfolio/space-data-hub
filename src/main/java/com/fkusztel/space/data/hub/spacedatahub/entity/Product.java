@@ -41,6 +41,9 @@ public class Product implements Serializable {
     @Column(name = "price")
     private Double price;
 
+    @Column(name = "name_mission")
+    private String nameMission;
+
     @Column(name = "product_url")
     private String url;
 }
