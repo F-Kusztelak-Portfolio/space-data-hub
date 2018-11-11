@@ -4,6 +4,8 @@ import com.fkusztel.space.data.hub.spacedatahub.entity.Product;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Filip.Kusztelak
@@ -12,6 +14,8 @@ import java.time.LocalDate;
 public interface ProductService {
 
     void saveProduct (Product product);
+
+    Optional<Product> findProduct (Long productId);
 
     Iterable<Product> findProductByDateLower (LocalDate date);
 
@@ -22,4 +26,6 @@ public interface ProductService {
     Iterable<Product> findAll();
 
     void deleteProduct(Long productId);
+
+    String purchaseProduct(List<Long> productId);
 }

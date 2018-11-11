@@ -21,18 +21,18 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    //Create ne product object and save it to database
+    //Create new product object and save it to database
     @PostMapping(path = "/create")
     public @ResponseBody
     String createProduct(@RequestParam String acquisitionDate, @RequestParam String missionName,
-                         @RequestParam List<String> footprint, @RequestParam Double price, @RequestParam String url) {
+                         @RequestParam List<String> footprint, @RequestParam Double price) {
 
         Product product = Product.builder()
                 .acquisitionDate(LocalDate.parse(acquisitionDate))
                 .footprint(footprint)
                 .nameMission(missionName)
+                .purchased(false)
                 .price(price)
-                .url(url)
                 .build();
 
         log.info("createProduct: {}", product.toString());
@@ -40,7 +40,7 @@ public class ProductController {
         return "Created " + product.toString();
     }
 
-    //Find all products in database
+    //Find all products in database -[FOR DEVELOPMENT PURPOSE]
     @GetMapping(path = "/all")
     public @ResponseBody
     Iterable<Product> getAllProducts() {
@@ -72,5 +72,31 @@ public class ProductController {
         log.info("findProductByDateBetween: {}{}", startDate, endDate);
         return productService.findProductByDateBetween(LocalDate.parse(startDate),
                 LocalDate.parse(endDate));
+    }
+
+    //Find product with given ID
+    @GetMapping(path = "/read")
+    public @ResponseBody
+    Product readProductById(@RequestParam Long productId) {
+        log.info("readProductById {}", productId);
+        return productService.findProduct(productId).get();
+    }
+
+    //Delete product with given ID
+    @DeleteMapping(path = "/delete")
+    public @ResponseBody
+    String deleteProduct(@RequestParam Long productId) {
+        log.info("deleteProduct with id: {}" , productId);
+
+        productService.deleteProduct(productId);
+
+        return "Product: " + productId + " deleted successfully";
+    }
+
+    //Purchase product with given ID
+    @PutMapping(path = "/order")
+    public @ResponseBody
+    String purchaseProduct(@RequestParam List<Long> productId) {
+        return productService.purchaseProduct(productId);
     }
 }

@@ -18,4 +18,10 @@ public interface MissionService {
     void deleteMission(Long missionId);
 
     boolean checkImageType(String imageType);
+
+    String missionCreate (String missionName, String imageryType,
+                          String startDate, String endDate);
+
+    String updateMission (String missionName, String imageryType,
+                          String startDate, String endDate, Optional<Mission> mission);
 }

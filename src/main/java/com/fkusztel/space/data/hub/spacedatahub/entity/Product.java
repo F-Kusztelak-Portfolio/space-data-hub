@@ -1,8 +1,6 @@
 package com.fkusztel.space.data.hub.spacedatahub.entity;
 
-import com.fkusztel.space.data.hub.spacedatahub.dto.FootprintDto;
 import lombok.*;
-import org.springframework.data.geo.Polygon;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -46,4 +44,7 @@ public class Product implements Serializable {
 
     @Column(name = "product_url")
     private String url;
+
+    @Column(name = "purchased")
+    private Boolean purchased;
 }

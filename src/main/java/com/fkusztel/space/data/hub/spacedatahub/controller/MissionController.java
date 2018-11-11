@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * @author Filip.Kusztelak
@@ -26,20 +26,8 @@ public class MissionController {
     String createMission(@RequestParam String missionName, @RequestParam String imageryType,
                          @RequestParam String startDate, @RequestParam String endDate) {
 
-        if (missionService.checkImageType(imageryType)){
-        //Create mission from given parameters and save it to database
-        Mission mission = Mission.builder()
-                .name(missionName)
-                .imageType(imageryType)
-                .startDate(LocalDate.parse(startDate))
-                .endDate(LocalDate.parse(endDate))
-                .build();
-
-        log.info("createMission: {}", mission.toString());
-        missionService.saveMission(mission);
-        return "Created " + mission.toString();
-        }
-        return "400 Bad Request";
+        return missionService.missionCreate(missionName, imageryType,
+                startDate, endDate);
     }
 
     //Find mission with given name
@@ -50,7 +38,7 @@ public class MissionController {
         return missionService.findMissionByName(name).get();
     }
 
-    //Find all missions in database
+    //Find all missions in database - [FOR DEVELOPMENT PURPOSE]
     @GetMapping(path = "/all")
     public @ResponseBody
     Iterable<Mission> getAllMissions() {
@@ -66,13 +54,10 @@ public class MissionController {
         log.info("updateMission: {}" , missionName);
 
         //Find mission by name and update details
-        Mission mission = missionService.findMissionByName(missionName).get();
-        mission.setImageType(imageryType);
-        mission.setStartDate(LocalDate.parse(startDate));
-        mission.setEndDate(LocalDate.parse(endDate));
+        Optional<Mission> mission = missionService.findMissionByName(missionName);
 
-        missionService.saveMission(mission);
-        return mission.toString() + " updated successfully";
+        return missionService.updateMission(missionName, imageryType,
+                startDate, endDate, mission);
     }
 
     //Delete mission with given name
