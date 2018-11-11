@@ -1,4 +1,4 @@
-# Spring Boot - JPA - lombok
+# Space - Data - Hub
 
 Spring Data JPA with Spring Boot Application with minimal configuration
 
