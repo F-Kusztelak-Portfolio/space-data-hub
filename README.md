@@ -19,7 +19,21 @@ In project root directory execute following commands:
 
 ## Usage
 
-### Creating New Mission (POST):
+### Roles
+
+```
+ADMIN
+username: admin
+password: adminPass
+```
+
+```
+USER
+username: user
+password: userPass
+```
+
+### Creating New Mission (POST)-(ADMIN):
 
 For Example:
 
@@ -33,7 +47,7 @@ http://localhost:8080/mission/create?missionName=someMission&imageryType=Panchro
 }
 ```
 
-### Get Mission by name (GET):
+### Get Mission by name (GET)-(USER):
 
 For Example:
 
@@ -44,7 +58,7 @@ http://localhost:8080/mission/read?name=oldMission
 }
 ```
 
-### Updating a Mission by name (PUT):
+### Updating a Mission by name (PUT)-(ADMIN):
 
 For Example:
 ```
@@ -57,7 +71,7 @@ http://localhost:8080/mission/update?missionName=someMission&imageryType=Hypersp
 }
 ```
 
-### Deleting a Mission by name (DELETE):
+### Deleting a Mission by name (DELETE)-(ADMIN):
 
 For Example:
 
@@ -68,7 +82,7 @@ http://localhost:8080/mission/delete?missionName=someMission
 }
 ```
 
-### Creating New Product (POST):
+### Creating New Product (POST)-(ADMIN):
 
 For Example:
 
@@ -82,7 +96,7 @@ http://localhost:8080/product/create?acquisitionDate=2018-09-08&missionName=newM
 }
 ```
 
-### Read Product by ID (GET):
+### Read Product by ID (GET)-(USER):
 
 For Example:
 
@@ -93,7 +107,7 @@ http://localhost:8080/product/read?productId=2
 }
 ```
 
-### Deleting Product by ID (DELETE):
+### Deleting Product by ID (DELETE)-(ADMIN):
 
 For Example:
 
@@ -104,7 +118,7 @@ http://localhost:8080/product/delete?productId=2
 }
 ```
 
-### Order products (PUT):
+### Order products (PUT)-(USER):
 
 For Example:
 
@@ -115,7 +129,7 @@ http://localhost:8080/product/order?productId=2,3
 }
 ```
 
-### Product get lower dates than: (GET):
+### Product get lower dates than: (GET)-(USER):
 
 For Example:
 
@@ -126,7 +140,7 @@ http://localhost:8080/product/lower?date=2018-06-07
 }
 ```
 
-### Product get greater dates than: (GET):
+### Product get greater dates than: (GET)-(USER):
 
 For Example:
 
@@ -137,7 +151,7 @@ http://localhost:8080/product/greater?date=2018-04-07
 }
 ```
 
-### Product get date between two dates: (GET):
+### Product get date between two dates: (GET)-(USER):
 
 For Example:
 

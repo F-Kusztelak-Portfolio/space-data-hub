@@ -32,10 +32,10 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/mission/read","/product/lower",
+                .antMatchers("/mission/read","/product/lower", "/product/read",
                         "/product/greater", "/product/between", "/product/order").authenticated()
-                .antMatchers("/mission/create","/mission/update",
-                        "/mission/delete","/product/create", "/product/delete").hasRole("ADMIN")
+                .antMatchers("/mission/create","/mission/update", "/mission/delete",
+                        "/product/create", "/product/delete").hasRole("ADMIN")
                 .and()
                 .httpBasic();
     }
