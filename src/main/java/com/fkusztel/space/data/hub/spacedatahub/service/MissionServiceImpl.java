@@ -97,6 +97,7 @@ public class MissionServiceImpl implements MissionService {
 
         if (mission.isPresent()) {
             Mission result = mission.get();
+            result.setName(missionName);
             result.setImageType(imageryType);
             result.setStartDate(LocalDate.parse(startDate));
             result.setEndDate(LocalDate.parse(endDate));
