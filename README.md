@@ -24,13 +24,23 @@ In project root directory execute following commands:
 For Example:
 
 ```
-
 http://localhost:8080/mission/create?missionName=someMission&imageryType=Panchromatic&startDate=2018-03-02&endDate=2018-04-01
 {
 • missionName: “someMission”,
 • imageryType: “Panchromatic”,
 • startDate: “2018-03-02”,
 • endDate: "2018-04-01"
+}
+```
+
+### Get Mission by name (GET):
+
+For Example:
+
+```
+http://localhost:8080/mission/read?name=oldMission
+{
+• name: “oldMission”,
 }
 ```
 
