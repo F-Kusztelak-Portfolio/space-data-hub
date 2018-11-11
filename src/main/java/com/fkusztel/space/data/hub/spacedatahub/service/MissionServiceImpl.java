@@ -19,11 +19,13 @@ public class MissionServiceImpl implements MissionService {
     @Autowired
     MissionRepository missionRepository;
 
+    //Save mission to database
     @Override
     public void saveMission(Mission mission) {
         missionRepository.save(mission);
     }
 
+    //Find mission by given name
     @Override
     public Optional<Mission> findMissionByName(String name) {
 
@@ -42,19 +44,21 @@ public class MissionServiceImpl implements MissionService {
         return Optional.empty();
     }
 
+    //Find all Mission objects
     @Override
     public Iterable<Mission> findAll() {
         return missionRepository.findAll();
     }
 
+    //Delete mission by ID
     @Override
     public void deleteMission(Long missionId) {
         missionRepository.deleteById(missionId);
     }
 
+    //Check if imageType has proper value
     @Override
     public boolean checkImageType(String imageType) {
-        //Check if imageType has proper value
         if (imageType.equalsIgnoreCase(Constants.ImageType.HYPERPECTRAL)
                 || imageType.equalsIgnoreCase(Constants.ImageType.MULTISPECTRAL)
                 || imageType.equalsIgnoreCase(Constants.ImageType.PANCHROMATIC)){

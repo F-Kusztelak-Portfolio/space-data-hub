@@ -20,6 +20,7 @@ public class MissionController {
     @Autowired
     MissionService missionService;
 
+    //Create new mission and add it to database
     @PostMapping(path = "/create")
     public @ResponseBody
     String createMission(@RequestParam String missionName, @RequestParam String imageryType,
@@ -38,9 +39,10 @@ public class MissionController {
         missionService.saveMission(mission);
         return "Created " + mission.toString();
         }
-        return "";
+        return "400 Bad Request";
     }
 
+    //Find mission with given name
     @GetMapping(path = "/read")
     public @ResponseBody
     Mission readMissionByName(@RequestParam String name) {
@@ -48,12 +50,14 @@ public class MissionController {
         return missionService.findMissionByName(name).get();
     }
 
+    //Find all missions in database
     @GetMapping(path = "/all")
     public @ResponseBody
     Iterable<Mission> getAllMissions() {
         return missionService.findAll();
     }
 
+    //Update mission with given name
     @PutMapping(path = "/update")
     public @ResponseBody
     String updateMission(@RequestParam String missionName, @RequestParam String imageryType,
@@ -71,6 +75,7 @@ public class MissionController {
         return mission.toString() + " updated successfully";
     }
 
+    //Delete mission with given name
     @DeleteMapping(path = "/delete")
     public @ResponseBody
     String deleteMission(@RequestParam String missionName) {

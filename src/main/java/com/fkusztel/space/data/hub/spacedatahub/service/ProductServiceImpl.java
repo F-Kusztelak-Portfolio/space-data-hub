@@ -19,11 +19,13 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     ProductRepository productRepository;
 
+    //Save product to database
     @Override
     public void saveProduct(Product product) {
         productRepository.save(product);
     }
 
+    //Finds a date with lower value than given one
     @Override
     public Iterable<Product> findProductByDateLower(LocalDate date) {
         List<Product> productList = Lists.newArrayList(findAll());
@@ -34,6 +36,7 @@ public class ProductServiceImpl implements ProductService{
                 .collect(Collectors.toList());
     }
 
+    //Finds a date with grater value than given one
     @Override
     public Iterable<Product> findProductByDateGreater(LocalDate date) {
         List<Product> productList = Lists.newArrayList(findAll());
@@ -44,6 +47,7 @@ public class ProductServiceImpl implements ProductService{
                 .collect(Collectors.toList());
     }
 
+    //Finds a date between two given dates
     @Override
     public Iterable<Product> findProductByDateBetween(LocalDate startDate, LocalDate endDate) {
         List<Product> productList = Lists.newArrayList(findAll());
@@ -61,11 +65,13 @@ public class ProductServiceImpl implements ProductService{
         return datesBetween;
         }
 
+    //Find all products in database
     @Override
     public Iterable<Product> findAll() {
         return productRepository.findAll();
     }
 
+    //Delete product with given ID
     @Override
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
