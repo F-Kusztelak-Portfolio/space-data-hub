@@ -1,5 +1,6 @@
 package com.fkusztel.space.data.hub.spacedatahub.config;
 
+import com.fkusztel.space.data.hub.spacedatahub.entity.ImageType;
 import com.fkusztel.space.data.hub.spacedatahub.entity.Product;
 
 import java.time.LocalDate;
@@ -16,8 +17,8 @@ public class TestObjectFactory {
         public static final String MISSION_NAME = "missionName";
         public static final String START_DATE = "2018-09-10";
         public static final String END_DATE = "2018-01-19";
-        public static final String PROPER_IMAGE_TYPE = "Panchromatic";
-        public static final String WRONG_IMAGE_TYPE = "wrong";
+        public static final ImageType PROPER_IMAGE_TYPE = ImageType.PANCHROMATIC;
+        public static final ImageType WRONG_IMAGE_TYPE = ImageType.valueOf("wrong");
 
         private MissionCreate() {
 

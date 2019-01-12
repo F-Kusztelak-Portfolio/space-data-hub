@@ -1,5 +1,6 @@
 package com.fkusztel.space.data.hub.spacedatahub.service;
 
+import com.fkusztel.space.data.hub.spacedatahub.entity.ImageType;
 import com.fkusztel.space.data.hub.spacedatahub.entity.Mission;
 
 import java.util.Optional;
@@ -17,11 +18,9 @@ public interface MissionService {
 
     void deleteMission(Long missionId);
 
-    boolean checkImageType(String imageType);
-
-    String missionCreate (String missionName, String imageryType,
+    Mission missionCreate (String missionName, ImageType imageryType,
                           String startDate, String endDate);
 
-    String updateMission (String missionName, String imageryType,
+    String updateMission (String missionName, ImageType imageryType,
                           String startDate, String endDate, Optional<Mission> mission);
 }

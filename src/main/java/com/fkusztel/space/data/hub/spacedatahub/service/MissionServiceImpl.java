@@ -1,6 +1,6 @@
 package com.fkusztel.space.data.hub.spacedatahub.service;
 
-import com.fkusztel.space.data.hub.spacedatahub.config.Constants;
+import com.fkusztel.space.data.hub.spacedatahub.entity.ImageType;
 import com.fkusztel.space.data.hub.spacedatahub.entity.Mission;
 import com.fkusztel.space.data.hub.spacedatahub.entity.MissionRepository;
 import com.google.common.collect.Lists;
@@ -59,23 +59,11 @@ public class MissionServiceImpl implements MissionService {
         missionRepository.deleteById(missionId);
     }
 
-    //Check if imageType has proper value
-    @Override
-    public boolean checkImageType(String imageType) {
-        if (imageType.equalsIgnoreCase(Constants.ImageType.HYPERPECTRAL)
-                || imageType.equalsIgnoreCase(Constants.ImageType.MULTISPECTRAL)
-                || imageType.equalsIgnoreCase(Constants.ImageType.PANCHROMATIC)){
-            return true;
-        }
-        return false;
-    }
-
     //Create new mission and add it to database
     @Override
-    public String missionCreate(String missionName, String imageryType,
+    public Mission missionCreate(String missionName, ImageType imageryType,
                                 String startDate, String endDate) {
 
-        if (checkImageType(imageryType)){
             //Create mission from given parameters and save it to database
             Mission mission = Mission.builder()
                     .name(missionName)
@@ -86,25 +74,34 @@ public class MissionServiceImpl implements MissionService {
 
             log.info("createMission: {}", mission.toString());
             saveMission(mission);
-            return "Created " + mission.toString();
-        }
-        return "400 Bad Request";
+            return missionRepository.save(mission);
     }
 
     @Override
-    public String updateMission(String missionName, String imageryType,
+    public String updateMission(String missionName, ImageType imageryType,
                                 String startDate, String endDate, Optional<Mission> mission) {
 
-        if (mission.isPresent()) {
-            Mission result = mission.get();
-            result.setName(missionName);
-            result.setImageType(imageryType);
-            result.setStartDate(LocalDate.parse(startDate));
-            result.setEndDate(LocalDate.parse(endDate));
+        Optional<Mission> result = findMissionByName(missionName);
 
-            saveMission(result);
-            return result.toString() + " updated successfully";
+        if (result.isPresent()) {
+            Mission updated = result.get();
+            updated.setName(missionName);
+            updated.setImageType(imageryType);
+            updated.setStartDate(LocalDate.parse(startDate));
+            updated.setEndDate(LocalDate.parse(endDate));
+
+            saveMission(updated);
+            return updated.toString() + " updated successfully";
+        } else {
+            Mission created = Mission.builder()
+                    .name(missionName)
+                    .imageType(imageryType)
+                    .startDate(LocalDate.parse(startDate))
+                    .endDate(LocalDate.parse(endDate))
+                    .build();
+
+            saveMission(created);
+            return "Mission with name " + missionName + " was absent and it was created: " + created.toString();
         }
-        return "Mission: " + missionName + " update failed, no such mission available";
     }
 }

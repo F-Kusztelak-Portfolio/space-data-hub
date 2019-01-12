@@ -8,6 +8,7 @@ import com.fkusztel.space.data.hub.spacedatahub.entity.MissionRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,6 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
 
 /**
  * @author Filip.Kusztelak
@@ -31,11 +34,6 @@ public class MissionServiceImplTest {
 
 	@Test
 	public void missionCreate_ProperImageType() {
-		String result = missionService.missionCreate(TestObjectFactory.MissionCreate.MISSION_NAME,
-				TestObjectFactory.MissionCreate.PROPER_IMAGE_TYPE,
-				TestObjectFactory.MissionCreate.START_DATE,
-				TestObjectFactory.MissionCreate.END_DATE);
-
 		Mission mission = Mission.builder()
 				.name(TestObjectFactory.MissionCreate.MISSION_NAME)
 				.imageType(TestObjectFactory.MissionCreate.PROPER_IMAGE_TYPE)
@@ -43,14 +41,20 @@ public class MissionServiceImplTest {
 				.endDate(LocalDate.parse(TestObjectFactory.MissionCreate.END_DATE))
 				.build();
 
-		String exceptedResult = "Created " + mission.toString();
+		Mockito.when(missionRepository.save(any(Mission.class))).thenReturn(mission);
 
-		Assert.assertEquals(exceptedResult, result);
+		Mission result = missionService.missionCreate(
+						TestObjectFactory.MissionCreate.MISSION_NAME,
+						TestObjectFactory.MissionCreate.PROPER_IMAGE_TYPE,
+						TestObjectFactory.MissionCreate.START_DATE,
+						TestObjectFactory.MissionCreate.END_DATE);
+
+		Assert.assertEquals(mission, result);
 	}
 
 	@Test
 	public void missionCreate_WrongImageType() {
-		String result = missionService.missionCreate(TestObjectFactory.MissionCreate.MISSION_NAME,
+		Mission result = missionService.missionCreate(TestObjectFactory.MissionCreate.MISSION_NAME,
 				TestObjectFactory.MissionCreate.WRONG_IMAGE_TYPE,
 				TestObjectFactory.MissionCreate.START_DATE,
 				TestObjectFactory.MissionCreate.END_DATE);
@@ -58,34 +62,6 @@ public class MissionServiceImplTest {
 		String exceptedResult = "400 Bad Request";
 
 		Assert.assertEquals(exceptedResult, result);
-	}
-
-	@Test
-	public void checkImageType_ProperValueOne() {
-		Boolean result = missionService.checkImageType(Constants.ImageType.PANCHROMATIC);
-
-		Assert.assertEquals(true, result);
-	}
-
-	@Test
-	public void checkImageType_ProperValueTwo() {
-		Boolean result = missionService.checkImageType(Constants.ImageType.MULTISPECTRAL);
-
-		Assert.assertEquals(true, result);
-	}
-
-	@Test
-	public void checkImageType_ProperValueThree() {
-		Boolean result = missionService.checkImageType(Constants.ImageType.HYPERPECTRAL);
-
-		Assert.assertEquals(true, result);
-	}
-
-	@Test
-	public void checkImageType_WrongValue() {
-		Boolean result = missionService.checkImageType(TestObjectFactory.MissionCreate.WRONG_IMAGE_TYPE);
-
-		Assert.assertEquals(false, result);
 	}
 
 	@Test

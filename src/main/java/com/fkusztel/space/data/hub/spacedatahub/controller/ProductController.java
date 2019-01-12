@@ -1,6 +1,7 @@
 package com.fkusztel.space.data.hub.spacedatahub.controller;
 
 import com.fkusztel.space.data.hub.spacedatahub.entity.Product;
+import com.fkusztel.space.data.hub.spacedatahub.exception.ProductNotFoundException;
 import com.fkusztel.space.data.hub.spacedatahub.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Filip.Kusztelak
@@ -50,47 +52,70 @@ public class ProductController {
     //Finds a date with lower value than given one
     @GetMapping(path = "/lower")
     public @ResponseBody
-    Iterable<Product> findProductByDateLower(String date) {
+    Iterable<Product> findProductByDateLower(String date) throws ProductNotFoundException {
         log.info("findProductByDateLower: {}", date);
-        return productService.findProductByDateLower(LocalDate.parse(date));
+
+        try {
+            return productService.findProductByDateLower(LocalDate.parse(date));
+        } catch(NoSuchElementException e) {
+            throw new ProductNotFoundException();
+        }
     }
 
     //Finds a date with grater value than given one
     @GetMapping(path = "/greater")
     public @ResponseBody
-    Iterable<Product> findProductByDateGreater(String date) {
+    Iterable<Product> findProductByDateGreater(String date) throws ProductNotFoundException {
         log.info("findProductByDateGreater: {}", date);
-        return productService.findProductByDateGreater(LocalDate.parse(date));
+
+        try {
+            return productService.findProductByDateGreater(LocalDate.parse(date));
+        } catch(NoSuchElementException e) {
+            throw new ProductNotFoundException();
+        }
     }
 
     //Finds a date between two given dates
     @GetMapping(path = "/between")
     public @ResponseBody
     Iterable<Product> findProductByDateBetween(String startDate,
-                                               String endDate) {
+                                               String endDate) throws ProductNotFoundException {
 
         log.info("findProductByDateBetween: {}{}", startDate, endDate);
-        return productService.findProductByDateBetween(LocalDate.parse(startDate),
-                LocalDate.parse(endDate));
+
+        try {
+            return productService.findProductByDateBetween(LocalDate.parse(startDate),
+                    LocalDate.parse(endDate));
+        } catch(NoSuchElementException e) {
+            throw new ProductNotFoundException();
+        }
     }
 
     //Find product with given ID
     @GetMapping(path = "/read")
     public @ResponseBody
-    Product readProductById(@RequestParam Long productId) {
+    Product readProductById(@RequestParam Long productId) throws ProductNotFoundException {
         log.info("readProductById {}", productId);
-        return productService.findProduct(productId).get();
+
+        try {
+            return productService.findProduct(productId).get();
+        } catch(NoSuchElementException e) {
+            throw new ProductNotFoundException();
+        }
     }
 
     //Delete product with given ID
     @DeleteMapping(path = "/delete")
     public @ResponseBody
-    String deleteProduct(@RequestParam Long productId) {
+    String deleteProduct(@RequestParam Long productId) throws ProductNotFoundException {
         log.info("deleteProduct with id: {}" , productId);
 
-        productService.deleteProduct(productId);
-
-        return "Product: " + productId + " deleted successfully";
+        try {
+            productService.deleteProduct(productId);
+            return "Product: " + productId + " deleted successfully";
+        } catch(NoSuchElementException e) {
+            throw new ProductNotFoundException();
+        }
     }
 
     //Purchase product with given ID

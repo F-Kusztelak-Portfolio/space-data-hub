@@ -30,7 +30,8 @@ public class Mission implements Serializable {
     private String name;
 
     @Column(name = "image_type")
-    private String imageType;
+    @Enumerated(EnumType.STRING)
+    private ImageType imageType;
 
     @Column(name = "start_date")
     private LocalDate startDate;

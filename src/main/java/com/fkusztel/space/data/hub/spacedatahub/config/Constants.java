@@ -8,12 +8,7 @@ import lombok.NoArgsConstructor;
  */
 public class Constants {
 
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ImageType {
-
-        public static final String PANCHROMATIC = "Panchromatic";
-        public static final String MULTISPECTRAL = "Multispectral";
-        public static final String HYPERPECTRAL = "Hyperspectral";
+    private Constants() {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
