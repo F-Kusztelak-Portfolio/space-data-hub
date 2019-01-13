@@ -3,6 +3,7 @@ package com.fkusztel.space.data.hub.spacedatahub.service;
 import com.fkusztel.space.data.hub.spacedatahub.entity.ImageType;
 import com.fkusztel.space.data.hub.spacedatahub.entity.Mission;
 import com.fkusztel.space.data.hub.spacedatahub.entity.MissionRepository;
+import com.fkusztel.space.data.hub.spacedatahub.exception.MissionNotFoundException;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -30,7 +32,7 @@ public class MissionServiceImpl implements MissionService {
 
     //Find mission by given name
     @Override
-    public Optional<Mission> findMissionByName(String name) {
+    public Mission findMissionByName(String name) throws MissionNotFoundException {
 
         //Get missions to list
         List<Mission> missionList = Lists.newArrayList(findAll());
@@ -40,11 +42,7 @@ public class MissionServiceImpl implements MissionService {
                 .filter(mission -> mission.getName().equals(name))
                 .findAny();
 
-        if (result.isPresent()){
-            return result;
-        }
-
-        return Optional.empty();
+        return result.orElseThrow(MissionNotFoundException::new);
     }
 
     //Find all Mission objects
@@ -55,8 +53,12 @@ public class MissionServiceImpl implements MissionService {
 
     //Delete mission by ID
     @Override
-    public void deleteMission(Long missionId) {
-        missionRepository.deleteById(missionId);
+    public void deleteMission(Long missionId) throws MissionNotFoundException {
+        try {
+            missionRepository.deleteById(missionId);
+        } catch(NoSuchElementException e) {
+            throw new MissionNotFoundException();
+        }
     }
 
     //Create new mission and add it to database
@@ -79,12 +81,11 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public String updateMission(String missionName, ImageType imageryType,
-                                String startDate, String endDate, Optional<Mission> mission) {
+                                String startDate, String endDate) {
 
-        Optional<Mission> result = findMissionByName(missionName);
-
-        if (result.isPresent()) {
-            Mission updated = result.get();
+        Mission updated;
+        try {
+            updated = findMissionByName(missionName);
             updated.setName(missionName);
             updated.setImageType(imageryType);
             updated.setStartDate(LocalDate.parse(startDate));
@@ -92,7 +93,7 @@ public class MissionServiceImpl implements MissionService {
 
             saveMission(updated);
             return updated.toString() + " updated successfully";
-        } else {
+        } catch (MissionNotFoundException e) {
             Mission created = Mission.builder()
                     .name(missionName)
                     .imageType(imageryType)

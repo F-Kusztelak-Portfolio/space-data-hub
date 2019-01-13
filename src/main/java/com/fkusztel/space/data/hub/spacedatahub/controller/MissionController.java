@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 /**
  * @author Filip.Kusztelak
  */
@@ -38,12 +35,7 @@ public class MissionController {
     public @ResponseBody
     Mission readMissionByName(@RequestParam String name) throws MissionNotFoundException {
         log.info("readMissionByName {}", name);
-
-        try {
-            return missionService.findMissionByName(name).get();
-        } catch(NoSuchElementException e) {
-            throw new MissionNotFoundException();
-        }
+        return missionService.findMissionByName(name);
     }
 
     //Find all missions in database - [FOR DEVELOPMENT PURPOSE]
@@ -62,9 +54,8 @@ public class MissionController {
         log.info("updateMission: {}" , missionName);
 
         //Find mission by name and update details
-        Optional<Mission> mission = missionService.findMissionByName(missionName);
         return missionService.updateMission(missionName, imageryType,
-                startDate, endDate, mission);
+                startDate, endDate);
     }
 
     //Delete mission with given name
@@ -74,12 +65,8 @@ public class MissionController {
         log.info("deleteMission with name: {}" , missionName);
 
         //Find mission by name and delete it
-        try {
-            Mission mission = missionService.findMissionByName(missionName).get();
-            missionService.deleteMission(mission.getId());
-            return "Mission: " + missionName + " deleted successfully";
-        } catch(NoSuchElementException e) {
-            throw new MissionNotFoundException();
-        }
+        Mission mission = missionService.findMissionByName(missionName);
+        missionService.deleteMission(mission.getId());
+        return "Mission: " + missionName + " deleted successfully";
     }
 }

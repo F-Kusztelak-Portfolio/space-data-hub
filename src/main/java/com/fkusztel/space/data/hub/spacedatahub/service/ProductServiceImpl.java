@@ -3,14 +3,15 @@ package com.fkusztel.space.data.hub.spacedatahub.service;
 import com.fkusztel.space.data.hub.spacedatahub.config.Constants;
 import com.fkusztel.space.data.hub.spacedatahub.entity.Product;
 import com.fkusztel.space.data.hub.spacedatahub.entity.ProductRepository;
+import com.fkusztel.space.data.hub.spacedatahub.exception.ProductNotFoundException;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,22 +32,21 @@ public class ProductServiceImpl implements ProductService{
 
     //Finds product with given ID
     @Override
-    public Optional<Product> findProduct(Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
+    public Product findProduct(Long productId) throws ProductNotFoundException {
+        Product product = productRepository
+                        .findById(productId)
+                        .orElseThrow(ProductNotFoundException::new);
 
         //Check if product is purchased and set correct URL
-        if (product.isPresent()) {
-            if (product.get().getPurchased()){
-                product.get().setUrl(Constants.ftp.FTP_URL);
-                saveProduct(product.get());
-                return product;
-            } else {
-                product.get().setUrl(Constants.ftp.FTP_PURCHASE);
-                saveProduct(product.get());
-                return product;
-            }
+        if (product.getPurchased()) {
+            product.setUrl(Constants.ftp.FTP_URL);
+            saveProduct(product);
+            return product;
+        } else {
+            product.setUrl(Constants.ftp.FTP_PURCHASE);
+            saveProduct(product);
+            return product;
         }
-        return Optional.empty();
     }
 
     //Finds a date with lower value than given one
@@ -83,7 +83,6 @@ public class ProductServiceImpl implements ProductService{
                     && product.getAcquisitionDate().isBefore(endDate)) {
 
                 datesBetween.add(product);
-
             }
         }
         return datesBetween;
@@ -97,27 +96,31 @@ public class ProductServiceImpl implements ProductService{
 
     //Delete product with given ID
     @Override
-    public void deleteProduct(Long productId) {
-        productRepository.deleteById(productId);
+    public void deleteProduct(Long productId) throws ProductNotFoundException {
+        try {
+            productRepository.deleteById(productId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ProductNotFoundException();
+        }
     }
 
     //Purchase product with given ID
     @Override
     public String purchaseProduct(List<Long> productId) {
+        Product product;
+
         //Get all products from the list and update purchase field
         for (Long id : productId) {
 
             log.info("purchaseProduct: {}", id);
 
-            Optional<Product> product = findProduct(id);
-
             //Check if product exists and update purchase field
-            if (product.isPresent()) {
-                Product purchasedProduct = product.get();
-                purchasedProduct.setPurchased(true);
-                saveProduct(purchasedProduct);
+            try {
+                product = findProduct(id);
+                product.setPurchased(true);
+                saveProduct(product);
                 log.info("Product with ID: {}", id + " purchased");
-            } else {
+            } catch (ProductNotFoundException e) {
                 return "Purchase failed, no such products available";
             }
         }

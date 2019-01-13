@@ -1,7 +1,5 @@
 package com.fkusztel.space.data.hub.spacedatahub.service;
 
-
-import com.fkusztel.space.data.hub.spacedatahub.config.Constants;
 import com.fkusztel.space.data.hub.spacedatahub.config.TestObjectFactory;
 import com.fkusztel.space.data.hub.spacedatahub.entity.Mission;
 import com.fkusztel.space.data.hub.spacedatahub.entity.MissionRepository;
@@ -15,7 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -66,14 +63,10 @@ public class MissionServiceImplTest {
 
 	@Test
 	public void missionUpdate_Success() {
-		Mission optional = Mission.builder().build();
-		Optional<Mission> mission = Optional.ofNullable(optional);
-
 		String result = missionService.updateMission(TestObjectFactory.MissionCreate.MISSION_NAME,
 				TestObjectFactory.MissionCreate.PROPER_IMAGE_TYPE,
 				TestObjectFactory.MissionCreate.START_DATE,
-				TestObjectFactory.MissionCreate.END_DATE,
-				mission);
+				TestObjectFactory.MissionCreate.END_DATE);
 
 		Mission missionResult = Mission.builder()
 				.name(TestObjectFactory.MissionCreate.MISSION_NAME)
@@ -89,13 +82,10 @@ public class MissionServiceImplTest {
 
 	@Test
 	public void missionUpdate_Fail() {
-		Optional<Mission> mission = Optional.empty();
-
 		String result = missionService.updateMission(TestObjectFactory.MissionCreate.MISSION_NAME,
 				TestObjectFactory.MissionCreate.PROPER_IMAGE_TYPE,
 				TestObjectFactory.MissionCreate.START_DATE,
-				TestObjectFactory.MissionCreate.END_DATE,
-				mission);
+				TestObjectFactory.MissionCreate.END_DATE);
 
 		String exceptedResult = "Mission: " +
 				TestObjectFactory.MissionCreate.MISSION_NAME +
