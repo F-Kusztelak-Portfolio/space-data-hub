@@ -20,7 +20,14 @@ public class MissionController {
     @Autowired
     MissionService missionService;
 
-    //Create new mission and add it to database
+    /**
+     * Create a new Mission
+     * with the specified values.
+     * @param missionName Name of the new mission.
+     * @param imageryType Image type take by this mission (PANCHROMATIC, MULTISPECTRAL, HYPERPECTRAL).
+     * @param startDate Starting date of mission (2018-05-07).
+     * @param endDate End date of mission (2018-08-04).
+     */
     @PostMapping(path = "/create")
     public @ResponseBody
     Mission createMission(@RequestParam String missionName, @RequestParam ImageType imageryType,
@@ -30,22 +37,36 @@ public class MissionController {
                 startDate, endDate);
     }
 
-    //Find mission with given name
+    /**
+     * Find mission in database
+     * with the specified values.
+     * @param missionName Name of the mission.
+     * @exception MissionNotFoundException Given mission was not found in database
+     */
     @GetMapping(path = "/read")
     public @ResponseBody
-    Mission readMissionByName(@RequestParam String name) throws MissionNotFoundException {
-        log.info("readMissionByName {}", name);
-        return missionService.findMissionByName(name);
+    Mission readMissionByName(@RequestParam String missionName) throws MissionNotFoundException {
+        log.info("readMissionByName {}", missionName);
+        return missionService.findMissionByName(missionName);
     }
 
-    //Find all missions in database - [FOR DEVELOPMENT PURPOSE]
+    /**
+     * Find all missions in database - [FOR DEVELOPMENT PURPOSE]
+     */
     @GetMapping(path = "/all")
     public @ResponseBody
     Iterable<Mission> getAllMissions() {
         return missionService.findAll();
     }
 
-    //Update mission with given name
+    /**
+     * Update a Mission if exists or creates a new one
+     * with the specified values.
+     * @param missionName Name of the new mission.
+     * @param imageryType Image type take by this mission (PANCHROMATIC, MULTISPECTRAL, HYPERPECTRAL).
+     * @param startDate Starting date of mission (2018-05-07).
+     * @param endDate End date of mission (2018-08-04).
+     */
     @PutMapping(path = "/update")
     public @ResponseBody
     String updateMission(@RequestParam String missionName, @RequestParam ImageType imageryType,
@@ -58,7 +79,12 @@ public class MissionController {
                 startDate, endDate);
     }
 
-    //Delete mission with given name
+    /**
+     * Delete mission from database
+     * with the specified values.
+     * @param missionName Name of the mission.
+     * @exception MissionNotFoundException Given mission was not found in database
+     */
     @DeleteMapping(path = "/delete")
     public @ResponseBody
     String deleteMission(@RequestParam String missionName) throws MissionNotFoundException{

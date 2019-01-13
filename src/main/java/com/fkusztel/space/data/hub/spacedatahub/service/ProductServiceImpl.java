@@ -24,13 +24,22 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     ProductRepository productRepository;
 
-    //Save product to database
+    /**
+     * Save product to database
+     * with the specified values.
+     * @param product Given product entity.
+     */
     @Override
     public void saveProduct(Product product) {
         productRepository.save(product);
     }
 
-    //Finds product with given ID
+    /**
+     * Find product in database
+     * with the specified values.
+     * @param productId ID of the product.
+     * @exception ProductNotFoundException Given product was not found in database
+     */
     @Override
     public Product findProduct(Long productId) throws ProductNotFoundException {
         Product product = productRepository
@@ -49,7 +58,11 @@ public class ProductServiceImpl implements ProductService{
         }
     }
 
-    //Finds a date with lower value than given one
+    /**
+     * Find a date with lower value than given one
+     * with the specified values.
+     * @param date Date from which the search should be smaller (2018-09-08).
+     */
     @Override
     public Iterable<Product> findProductByDateLower(LocalDate date) {
         List<Product> productList = Lists.newArrayList(findAll());
@@ -60,7 +73,11 @@ public class ProductServiceImpl implements ProductService{
                 .collect(Collectors.toList());
     }
 
-    //Finds a date with grater value than given one
+    /**
+     * Find a date with grater value than given one
+     * with the specified values.
+     * @param date Date from which the search should be greater (2018-01-01).
+     */
     @Override
     public Iterable<Product> findProductByDateGreater(LocalDate date) {
         List<Product> productList = Lists.newArrayList(findAll());
@@ -71,7 +88,12 @@ public class ProductServiceImpl implements ProductService{
                 .collect(Collectors.toList());
     }
 
-    //Finds a date between two given dates
+    /**
+     * Find a date between two given dates
+     * with the specified values.
+     * @param startDate Date from which the search should be smaller (2018-01-01).
+     * @param endDate Date from which the search should be greater (2018-02-02).
+     */
     @Override
     public Iterable<Product> findProductByDateBetween(LocalDate startDate, LocalDate endDate) {
         List<Product> productList = Lists.newArrayList(findAll());
@@ -88,13 +110,20 @@ public class ProductServiceImpl implements ProductService{
         return datesBetween;
         }
 
-    //Find all products in database
+    /**
+     * Find all products in database - [FOR DEVELOPMENT PURPOSE]
+     */
     @Override
     public Iterable<Product> findAll() {
         return productRepository.findAll();
     }
 
-    //Delete product with given ID
+    /**
+     * Delete product from database
+     * with the specified values.
+     * @param productId ID of the product.
+     * @exception ProductNotFoundException Given product was not found in database
+     */
     @Override
     public void deleteProduct(Long productId) throws ProductNotFoundException {
         try {
@@ -104,7 +133,11 @@ public class ProductServiceImpl implements ProductService{
         }
     }
 
-    //Purchase product with given ID
+    /**
+     * Purchase products
+     * with the specified values.
+     * @param productId List of products ID ([2, 3]).
+     */
     @Override
     public String purchaseProduct(List<Long> productId) {
         Product product;

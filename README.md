@@ -38,10 +38,10 @@ password: userPass
 For Example:
 
 ```
-http://localhost:8080/mission/create?missionName=someMission&imageryType=Panchromatic&startDate=2018-03-02&endDate=2018-04-01
+http://localhost:8080/mission/create?missionName=someMission&imageryType=PANCHROMATIC&startDate=2018-03-02&endDate=2018-04-01
 {
 • missionName: “someMission”,
-• imageryType: “Panchromatic”,
+• imageryType: “PANCHROMATIC”,
 • startDate: “2018-03-02”,
 • endDate: "2018-04-01"
 }
@@ -62,10 +62,10 @@ http://localhost:8080/mission/read?name=oldMission
 
 For Example:
 ```
-http://localhost:8080/mission/update?missionName=someMission&imageryType=Hyperspectral&startDate=2018-05-07&endDate=2018-08-04
+http://localhost:8080/mission/update?missionName=someMission&imageryType=HYPERPECTRAL&startDate=2018-05-07&endDate=2018-08-04
 {
 • missionName: “someMission”,
-• imageryType: “Hyperspectral”,
+• imageryType: “HYPERPECTRAL”,
 • startDate: “2018-05-07”,
 • endDate: "2018-08-04"
 }

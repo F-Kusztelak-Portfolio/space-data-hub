@@ -24,13 +24,21 @@ public class MissionServiceImpl implements MissionService {
     @Autowired
     MissionRepository missionRepository;
 
-    //Save mission to database
+    /**
+     * Save mission in database
+     * @param mission Given mission entity.
+     */
     @Override
     public void saveMission(Mission mission) {
         missionRepository.save(mission);
     }
 
-    //Find mission by given name
+    /**
+     * Find mission
+     * with the specified values.
+     * @param name Name of the mission.
+     * @exception MissionNotFoundException Given mission was not found in database
+     */
     @Override
     public Mission findMissionByName(String name) throws MissionNotFoundException {
 
@@ -45,13 +53,20 @@ public class MissionServiceImpl implements MissionService {
         return result.orElseThrow(MissionNotFoundException::new);
     }
 
-    //Find all Mission objects
+    /**
+     * Find all missions in database - [FOR DEVELOPMENT PURPOSE]
+     */
     @Override
     public Iterable<Mission> findAll() {
         return missionRepository.findAll();
     }
 
-    //Delete mission by ID
+    /**
+     * Delete mission from database
+     * with the specified values.
+     * @param missionId Id of the mission.
+     * @exception MissionNotFoundException Given mission was not found in database
+     */
     @Override
     public void deleteMission(Long missionId) throws MissionNotFoundException {
         try {
@@ -61,7 +76,14 @@ public class MissionServiceImpl implements MissionService {
         }
     }
 
-    //Create new mission and add it to database
+    /**
+     * Create a new Mission
+     * with the specified values.
+     * @param missionName Name of the new mission.
+     * @param imageryType Image type take by this mission (PANCHROMATIC, MULTISPECTRAL, HYPERPECTRAL).
+     * @param startDate Starting date of mission (2018-05-07).
+     * @param endDate End date of mission (2018-08-04).
+     */
     @Override
     public Mission missionCreate(String missionName, ImageType imageryType,
                                 String startDate, String endDate) {
@@ -79,6 +101,14 @@ public class MissionServiceImpl implements MissionService {
             return missionRepository.save(mission);
     }
 
+    /**
+     * Update a Mission if exists or creates a new one
+     * with the specified values.
+     * @param missionName Name of the new mission.
+     * @param imageryType Image type take by this mission (PANCHROMATIC, MULTISPECTRAL, HYPERPECTRAL).
+     * @param startDate Starting date of mission (2018-05-07).
+     * @param endDate End date of mission (2018-08-04).
+     */
     @Override
     public String updateMission(String missionName, ImageType imageryType,
                                 String startDate, String endDate) {

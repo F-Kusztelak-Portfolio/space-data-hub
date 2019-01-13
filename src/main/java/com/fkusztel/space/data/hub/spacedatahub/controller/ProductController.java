@@ -22,7 +22,14 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    //Create new product object and save it to database
+    /**
+     * Create a new Product
+     * with the specified values.
+     * @param acquisitionDate Date when mission was acquired (2018-09-08).
+     * @param missionName Name of mission that took remote sensing images.
+     * @param footprint Image footprint (["18769", "22213", "99123", "8876"]).
+     * @param price Price of given product.
+     */
     @PostMapping(path = "/create")
     public @ResponseBody
     String createProduct(@RequestParam String acquisitionDate, @RequestParam String missionName,
@@ -41,14 +48,20 @@ public class ProductController {
         return "Created " + product.toString();
     }
 
-    //Find all products in database -[FOR DEVELOPMENT PURPOSE]
+    /**
+     * Find all products in database - [FOR DEVELOPMENT PURPOSE]
+     */
     @GetMapping(path = "/all")
     public @ResponseBody
     Iterable<Product> getAllProducts() {
         return productService.findAll();
     }
 
-    //Finds a date with lower value than given one
+    /**
+     * Find a date with lower value than given one
+     * with the specified values.
+     * @param date Date from which the search should be smaller (2018-09-08).
+     */
     @GetMapping(path = "/lower")
     public @ResponseBody
     Iterable<Product> findProductByDateLower(String date) {
@@ -57,7 +70,11 @@ public class ProductController {
         return productService.findProductByDateLower(LocalDate.parse(date));
     }
 
-    //Finds a date with grater value than given one
+    /**
+     * Find a date with grater value than given one
+     * with the specified values.
+     * @param date Date from which the search should be greater (2018-01-01).
+     */
     @GetMapping(path = "/greater")
     public @ResponseBody
     Iterable<Product> findProductByDateGreater(String date) {
@@ -66,7 +83,12 @@ public class ProductController {
         return productService.findProductByDateGreater(LocalDate.parse(date));
     }
 
-    //Finds a date between two given dates
+    /**
+     * Find a date between two given dates
+     * with the specified values.
+     * @param startDate Date from which the search should be smaller (2018-01-01).
+     * @param endDate Date from which the search should be greater (2018-02-02).
+     */
     @GetMapping(path = "/between")
     public @ResponseBody
     Iterable<Product> findProductByDateBetween(String startDate,
@@ -78,7 +100,12 @@ public class ProductController {
                 LocalDate.parse(endDate));
     }
 
-    //Find product with given ID
+    /**
+     * Find product in database
+     * with the specified values.
+     * @param productId ID of the product.
+     * @exception ProductNotFoundException Given product was not found in database
+     */
     @GetMapping(path = "/read")
     public @ResponseBody
     Product readProductById(@RequestParam Long productId) throws ProductNotFoundException {
@@ -87,7 +114,12 @@ public class ProductController {
         return productService.findProduct(productId);
     }
 
-    //Delete product with given ID
+    /**
+     * Delete product from database
+     * with the specified values.
+     * @param productId ID of the product.
+     * @exception ProductNotFoundException Given product was not found in database
+     */
     @DeleteMapping(path = "/delete")
     public @ResponseBody
     String deleteProduct(@RequestParam Long productId) throws ProductNotFoundException {
@@ -97,7 +129,11 @@ public class ProductController {
         return "Product: " + productId + " deleted successfully";
     }
 
-    //Purchase product with given ID
+    /**
+     * Purchase products
+     * with the specified values.
+     * @param productId List of products ID ([2, 3]).
+     */
     @PutMapping(path = "/order")
     public @ResponseBody
     String purchaseProduct(@RequestParam List<Long> productId) {
