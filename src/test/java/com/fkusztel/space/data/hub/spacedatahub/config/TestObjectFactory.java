@@ -1,6 +1,7 @@
 package com.fkusztel.space.data.hub.spacedatahub.config;
 
 import com.fkusztel.space.data.hub.spacedatahub.entity.ImageType;
+import com.fkusztel.space.data.hub.spacedatahub.entity.Mission;
 import com.fkusztel.space.data.hub.spacedatahub.entity.Product;
 
 import java.time.LocalDate;
@@ -18,16 +19,41 @@ public class TestObjectFactory {
         public static final String START_DATE = "2018-09-10";
         public static final String END_DATE = "2018-01-19";
         public static final ImageType PROPER_IMAGE_TYPE = ImageType.PANCHROMATIC;
-        public static final ImageType WRONG_IMAGE_TYPE = ImageType.valueOf("wrong");
+
+        public static final String DIFFERENT_MISSION_NAME = "differentMissionName";
+        private static final String DIFFERENT_START_DATE = "2018-01-01";
+        private static final String DIFFERENT_END_DATE = "2018-12-12";
+        private static final ImageType DIFFERENT_PROPER_IMAGE_TYPE = ImageType.PANCHROMATIC;
 
         private MissionCreate() {
 
         }
     }
 
+    public static class NewMission {
+
+        public static Mission mission = Mission.builder()
+                .name(TestObjectFactory.MissionCreate.MISSION_NAME)
+                .imageType(TestObjectFactory.MissionCreate.PROPER_IMAGE_TYPE)
+                .startDate(LocalDate.parse(TestObjectFactory.MissionCreate.START_DATE))
+                .endDate(LocalDate.parse(TestObjectFactory.MissionCreate.END_DATE))
+                .build();
+
+        public static Mission differentMission = Mission.builder()
+                .name(TestObjectFactory.MissionCreate.DIFFERENT_MISSION_NAME)
+                .imageType(TestObjectFactory.MissionCreate.DIFFERENT_PROPER_IMAGE_TYPE)
+                .startDate(LocalDate.parse(TestObjectFactory.MissionCreate.DIFFERENT_START_DATE))
+                .endDate(LocalDate.parse(TestObjectFactory.MissionCreate.DIFFERENT_END_DATE))
+                .build();
+
+        private NewMission() {
+
+        }
+    }
+
     public static class ProductList{
 
-        private static Product productFirst = Product.builder()
+        public static Product productFirst = Product.builder()
                 .acquisitionDate(LocalDate.parse(Dates.FIRST_DATE))
                 .build();
 
@@ -43,7 +69,7 @@ public class TestObjectFactory {
                 .acquisitionDate(LocalDate.parse(Dates.FOURTH_DATE))
                 .build();
 
-        private static Product productFifth = Product.builder()
+        public static Product productFifth = Product.builder()
                 .acquisitionDate(LocalDate.parse(Dates.FIFTH_DATE))
                 .build();
 
@@ -89,13 +115,17 @@ public class TestObjectFactory {
         }
     }
 
-    public static class ProductPurchased{
+    public static class NewProduct{
 
-        public static Product product = Product.builder()
+        public static Product productPurchased = Product.builder()
                 .purchased(true)
                 .build();
 
-        private ProductPurchased() {
+        public static Product productNotPurchased = Product.builder()
+                .purchased(false)
+                .build();
+
+        private NewProduct() {
 
         }
     }
