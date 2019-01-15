@@ -9,17 +9,16 @@ import com.fkusztel.space.data.hub.spacedatahub.exception.MissionNotFoundExcepti
  */
 public interface MissionService {
 
-    void saveMission (Mission mission);
+  void saveMission(Mission mission);
 
-    Mission findMissionByName (String name) throws MissionNotFoundException;
+  Mission findMissionByName(String name) throws MissionNotFoundException;
 
-    Iterable<Mission> findAll();
+  Iterable<Mission> findAll();
 
-    void deleteMission(Long missionId) throws MissionNotFoundException;
+  void deleteMission(Long missionId) throws MissionNotFoundException;
 
-    Mission missionCreate (String missionName, ImageType imageryType,
-                          String startDate, String endDate);
+  Mission missionCreate(
+      String missionName, ImageType imageryType, String startDate, String endDate);
 
-    String updateMission (String missionName, ImageType imageryType,
-                          String startDate, String endDate);
+  String updateMission(String missionName, ImageType imageryType, String startDate, String endDate);
 }

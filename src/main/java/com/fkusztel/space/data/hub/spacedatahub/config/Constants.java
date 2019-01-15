@@ -8,13 +8,12 @@ import lombok.NoArgsConstructor;
  */
 public class Constants {
 
-    private Constants() {
-    }
+  private Constants() {}
 
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ftp {
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  public static class ftp {
 
-        public static final String FTP_URL = "ftp://username:password@hostname/product";
-        public static final String FTP_PURCHASE = "PURCHASE PRODUCT";
-    }
+    public static final String FTP_URL = "ftp://username:password@hostname/product";
+    public static final String FTP_PURCHASE = "PURCHASE PRODUCT";
+  }
 }

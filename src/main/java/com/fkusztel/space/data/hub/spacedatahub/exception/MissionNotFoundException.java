@@ -6,6 +6,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * @author Filip.Kusztelak
  */
-@ResponseStatus(value= HttpStatus.NOT_FOUND, reason = "This Mission does not exist in the system.")
-public class MissionNotFoundException extends Exception {
-}
+@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "This Mission does not exist in the system.")
+public class MissionNotFoundException extends Exception {}
