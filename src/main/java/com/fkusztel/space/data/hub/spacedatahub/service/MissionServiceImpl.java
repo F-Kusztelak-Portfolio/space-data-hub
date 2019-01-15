@@ -1,16 +1,17 @@
 package com.fkusztel.space.data.hub.spacedatahub.service;
 
-import com.fkusztel.space.data.hub.spacedatahub.config.Constants;
+import com.fkusztel.space.data.hub.spacedatahub.entity.ImageType;
 import com.fkusztel.space.data.hub.spacedatahub.entity.Mission;
 import com.fkusztel.space.data.hub.spacedatahub.entity.MissionRepository;
+import com.fkusztel.space.data.hub.spacedatahub.exception.MissionNotFoundException;
 import com.google.common.collect.Lists;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Filip.Kusztelak
@@ -19,92 +20,120 @@ import java.util.Optional;
 @Service
 public class MissionServiceImpl implements MissionService {
 
-    @Autowired
-    MissionRepository missionRepository;
+  @Autowired MissionRepository missionRepository;
 
-    //Save mission to database
-    @Override
-    public void saveMission(Mission mission) {
-        missionRepository.save(mission);
+  /**
+   * Save mission in database
+   *
+   * @param mission Given mission entity.
+   */
+  @Override
+  public void saveMission(Mission mission) {
+    missionRepository.save(mission);
+  }
+
+  /**
+   * Find mission with the specified values.
+   *
+   * @param name Name of the mission.
+   * @exception MissionNotFoundException Given mission was not found in database
+   */
+  @Override
+  public Mission findMissionByName(String name) throws MissionNotFoundException {
+
+    // Get missions to list
+    List<Mission> missionList = Lists.newArrayList(findAll());
+
+    // Filter and get correct one
+    Optional<Mission> result =
+        missionList.stream().filter(mission -> mission.getName().equals(name)).findAny();
+
+    return result.orElseThrow(MissionNotFoundException::new);
+  }
+
+  /** Find all missions in database - [FOR DEVELOPMENT PURPOSE] */
+  @Override
+  public Iterable<Mission> findAll() {
+    return missionRepository.findAll();
+  }
+
+  /**
+   * Delete mission from database with the specified values.
+   *
+   * @param missionId Id of the mission.
+   * @exception MissionNotFoundException Given mission was not found in database
+   */
+  @Override
+  public void deleteMission(Long missionId) throws MissionNotFoundException {
+    try {
+      missionRepository.deleteById(missionId);
+    } catch (NoSuchElementException e) {
+      throw new MissionNotFoundException();
     }
+  }
 
-    //Find mission by given name
-    @Override
-    public Optional<Mission> findMissionByName(String name) {
+  /**
+   * Create a new Mission with the specified values.
+   *
+   * @param missionName Name of the new mission.
+   * @param imageryType Image type take by this mission (PANCHROMATIC, MULTISPECTRAL, HYPERPECTRAL).
+   * @param startDate Starting date of mission (2018-05-07).
+   * @param endDate End date of mission (2018-08-04).
+   */
+  @Override
+  public Mission missionCreate(
+      String missionName, ImageType imageryType, String startDate, String endDate) {
 
-        //Get missions to list
-        List<Mission> missionList = Lists.newArrayList(findAll());
+    // Create mission from given parameters and save it to database
+    Mission mission =
+        Mission.builder()
+            .name(missionName)
+            .imageType(imageryType)
+            .startDate(LocalDate.parse(startDate))
+            .endDate(LocalDate.parse(endDate))
+            .build();
 
-        //Filter and get correct one
-        Optional<Mission> result = missionList.stream()
-                .filter(mission -> mission.getName().equals(name))
-                .findAny();
+    log.info("createMission: {}", mission.toString());
+    saveMission(mission);
+    return missionRepository.save(mission);
+  }
 
-        if (result.isPresent()){
-            return result;
-        }
+  /**
+   * Update a Mission if exists or creates a new one with the specified values.
+   *
+   * @param missionName Name of the new mission.
+   * @param imageryType Image type take by this mission (PANCHROMATIC, MULTISPECTRAL, HYPERPECTRAL).
+   * @param startDate Starting date of mission (2018-05-07).
+   * @param endDate End date of mission (2018-08-04).
+   */
+  @Override
+  public String updateMission(
+      String missionName, ImageType imageryType, String startDate, String endDate) {
 
-        return Optional.empty();
+    Mission updated;
+    try {
+      updated = findMissionByName(missionName);
+      updated.setName(missionName);
+      updated.setImageType(imageryType);
+      updated.setStartDate(LocalDate.parse(startDate));
+      updated.setEndDate(LocalDate.parse(endDate));
+
+      saveMission(updated);
+      return updated.toString() + " updated successfully";
+    } catch (MissionNotFoundException e) {
+      Mission created =
+          Mission.builder()
+              .name(missionName)
+              .imageType(imageryType)
+              .startDate(LocalDate.parse(startDate))
+              .endDate(LocalDate.parse(endDate))
+              .build();
+
+      saveMission(created);
+      return "Mission with name "
+          + missionName
+          + " was absent and it was created: "
+          + created.toString();
     }
-
-    //Find all Mission objects
-    @Override
-    public Iterable<Mission> findAll() {
-        return missionRepository.findAll();
-    }
-
-    //Delete mission by ID
-    @Override
-    public void deleteMission(Long missionId) {
-        missionRepository.deleteById(missionId);
-    }
-
-    //Check if imageType has proper value
-    @Override
-    public boolean checkImageType(String imageType) {
-        if (imageType.equalsIgnoreCase(Constants.ImageType.HYPERPECTRAL)
-                || imageType.equalsIgnoreCase(Constants.ImageType.MULTISPECTRAL)
-                || imageType.equalsIgnoreCase(Constants.ImageType.PANCHROMATIC)){
-            return true;
-        }
-        return false;
-    }
-
-    //Create new mission and add it to database
-    @Override
-    public String missionCreate(String missionName, String imageryType,
-                                String startDate, String endDate) {
-
-        if (checkImageType(imageryType)){
-            //Create mission from given parameters and save it to database
-            Mission mission = Mission.builder()
-                    .name(missionName)
-                    .imageType(imageryType)
-                    .startDate(LocalDate.parse(startDate))
-                    .endDate(LocalDate.parse(endDate))
-                    .build();
-
-            log.info("createMission: {}", mission.toString());
-            saveMission(mission);
-            return "Created " + mission.toString();
-        }
-        return "400 Bad Request";
-    }
-
-    @Override
-    public String updateMission(String missionName, String imageryType,
-                                String startDate, String endDate, Optional<Mission> mission) {
-
-        if (mission.isPresent()) {
-            Mission result = mission.get();
-            result.setName(missionName);
-            result.setImageType(imageryType);
-            result.setStartDate(LocalDate.parse(startDate));
-            result.setEndDate(LocalDate.parse(endDate));
-
-            saveMission(result);
-            return result.toString() + " updated successfully";
-        }
-        return "Mission: " + missionName + " update failed, no such mission available";
-    }
+  }
 }

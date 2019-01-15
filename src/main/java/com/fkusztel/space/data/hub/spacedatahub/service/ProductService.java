@@ -1,11 +1,10 @@
 package com.fkusztel.space.data.hub.spacedatahub.service;
 
 import com.fkusztel.space.data.hub.spacedatahub.entity.Product;
-import org.springframework.stereotype.Service;
-
+import com.fkusztel.space.data.hub.spacedatahub.exception.ProductNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Filip.Kusztelak
@@ -13,19 +12,19 @@ import java.util.Optional;
 @Service
 public interface ProductService {
 
-    void saveProduct (Product product);
+  void saveProduct(Product product);
 
-    Optional<Product> findProduct (Long productId);
+  Product findProduct(Long productId) throws ProductNotFoundException;
 
-    Iterable<Product> findProductByDateLower (LocalDate date);
+  Iterable<Product> findProductByDateLower(LocalDate date);
 
-    Iterable<Product> findProductByDateGreater (LocalDate date);
+  Iterable<Product> findProductByDateGreater(LocalDate date);
 
-    Iterable<Product> findProductByDateBetween (LocalDate startDate, LocalDate endDate);
+  Iterable<Product> findProductByDateBetween(LocalDate startDate, LocalDate endDate);
 
-    Iterable<Product> findAll();
+  Iterable<Product> findAll();
 
-    void deleteProduct(Long productId);
+  void deleteProduct(Long productId) throws ProductNotFoundException;
 
-    String purchaseProduct(List<Long> productId);
+  String purchaseProduct(List<Long> productId);
 }
